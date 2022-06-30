@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiEdit } from "react-icons/fi";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 
 const Todos = () => {
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/task")
+      .then((res) => res.json())
+      .then((data) => setTasks(data));
+  }, []);
   return (
     <div className="container max-w-[1080px] mx-auto">
       <div className="w-full h-[350px] bg-white rounded-b-[50%] relative">
@@ -43,24 +50,26 @@ const Todos = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th>
-                  <label>
-                    <input type="checkbox" class="checkbox" />
-                  </label>
-                </th>
-                <td>Purple</td>
-                <th>
-                  <div className="flex gap-3">
-                    <button class="btn btn-success">
-                      <FiEdit className="text-xl text-white"></FiEdit>
-                    </button>
-                    <button class="btn btn-error">
-                      <RiDeleteBin5Fill className="text-xl text-white"></RiDeleteBin5Fill>
-                    </button>
-                  </div>
-                </th>
-              </tr>
+              {tasks.map((item) => (
+                <tr>
+                  <th>
+                    <label>
+                      <input type="checkbox" class="checkbox" />
+                    </label>
+                  </th>
+                  <td>{item.task}</td>
+                  <th>
+                    <div className="flex gap-3">
+                      <button class="btn btn-success">
+                        <FiEdit className="text-xl text-white"></FiEdit>
+                      </button>
+                      <button class="btn btn-error">
+                        <RiDeleteBin5Fill className="text-xl text-white"></RiDeleteBin5Fill>
+                      </button>
+                    </div>
+                  </th>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
