@@ -2,15 +2,48 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiEdit } from "react-icons/fi";
 import { RiDeleteBin5Fill } from "react-icons/ri";
+import { useForm } from "react-hook-form";
 
 const Todos = () => {
   const [tasks, setTasks] = useState([]);
+  const { register, handleSubmit, reset } = useForm();
 
   useEffect(() => {
     fetch("http://localhost:5000/task")
       .then((res) => res.json())
       .then((data) => setTasks(data));
   }, []);
+
+  const handleDelete = (id) => {
+    const url = `http://localhost:5000/task/${id}`;
+    fetch(url, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.deletedCount > 0) {
+          const remaining = tasks.filter((task) => task._id !== id);
+          setTasks(remaining);
+        }
+      });
+  };
+
+  const onSubmit = (data) => {
+    console.log(data);
+    const url = `http://localhost:5000/task`;
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result);
+        reset();
+      });
+  };
   return (
     <div className="container max-w-[1080px] mx-auto">
       <div className="w-full h-[350px] bg-white rounded-b-[50%] relative">
@@ -31,17 +64,20 @@ const Todos = () => {
         </div>
 
         <div className="bg-base-200 w-[90%] mx-auto absolute bottom-0 left-[5%] h-56 rounded-lg flex gap-3 items-center justify-center">
-          <input
-            type="text"
-            placeholder="Enter Task"
-            className="p-3 border-b-2 rounded-lg"
-          />
-          <button className="btn btn-primary">ADD</button>
+          <form className="addItem-form" onSubmit={handleSubmit(onSubmit)}>
+            <input
+              className="p-3 border-b-2 rounded-lg mr-3"
+              type="text"
+              placeholder="Enter Task"
+              {...register("task")}
+            />
+            <input className="btn btn-primary" type="submit" value="Add" />
+          </form>
         </div>
       </div>
       <div className="bg-base-100 w-[90%] mx-auto mt-5">
-        <div class="overflow-x-auto w-full">
-          <table class="table w-full p-5">
+        <div className="overflow-x-auto w-full">
+          <table className="table w-full p-5">
             <thead>
               <tr>
                 <th></th>
@@ -51,19 +87,22 @@ const Todos = () => {
             </thead>
             <tbody>
               {tasks.map((item) => (
-                <tr>
+                <tr key={item._id}>
                   <th>
                     <label>
-                      <input type="checkbox" class="checkbox" />
+                      <input type="checkbox" className="checkbox" />
                     </label>
                   </th>
                   <td>{item.task}</td>
                   <th>
                     <div className="flex gap-3">
-                      <button class="btn btn-success">
+                      <button className="btn btn-success">
                         <FiEdit className="text-xl text-white"></FiEdit>
                       </button>
-                      <button class="btn btn-error">
+                      <button
+                        onClick={() => handleDelete(item._id)}
+                        className="btn btn-error"
+                      >
                         <RiDeleteBin5Fill className="text-xl text-white"></RiDeleteBin5Fill>
                       </button>
                     </div>
