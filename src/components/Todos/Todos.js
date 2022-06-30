@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FiEdit } from "react-icons/fi";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { useForm } from "react-hook-form";
@@ -7,6 +7,11 @@ import { useForm } from "react-hook-form";
 const Todos = () => {
   const [tasks, setTasks] = useState([]);
   const { register, handleSubmit, reset } = useForm();
+  const navigate = useNavigate();
+
+  const navigateToUpdate = (id) => {
+    navigate(`/task/${id}`);
+  };
 
   useEffect(() => {
     fetch("http://localhost:5000/task")
@@ -96,7 +101,10 @@ const Todos = () => {
                   <td>{item.task}</td>
                   <th>
                     <div className="flex gap-3">
-                      <button className="btn btn-success">
+                      <button
+                        onClick={() => navigateToUpdate(item._id)}
+                        className="btn btn-success"
+                      >
                         <FiEdit className="text-xl text-white"></FiEdit>
                       </button>
                       <button
