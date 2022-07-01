@@ -11,7 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Todos></Todos>}></Route>
         <Route
-          path="/complete-todos"
+          path="/complete-task"
           element={<CompleteTodos></CompleteTodos>}
         ></Route>
         <Route path="/calender" element={<Calender></Calender>}></Route>

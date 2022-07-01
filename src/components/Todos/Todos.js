@@ -49,6 +49,20 @@ const Todos = () => {
         reset();
       });
   };
+
+  const completedTask = (id) => {
+    const url = `http://localhost:5000/task/${id}`;
+    fetch(url, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      });
+  };
   return (
     <div className="container max-w-[1080px] mx-auto">
       <div className="w-full h-[350px] bg-white rounded-b-[50%] relative">
@@ -95,7 +109,11 @@ const Todos = () => {
                 <tr key={item._id}>
                   <th>
                     <label>
-                      <input type="checkbox" className="checkbox" />
+                      <input
+                        onClick={() => completedTask(item._id)}
+                        type="checkbox"
+                        className="checkbox"
+                      />
                     </label>
                   </th>
                   <td>{item.task}</td>
