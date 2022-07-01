@@ -7,7 +7,7 @@ const TaskUpdate = () => {
   const [tasks, setTasks] = useState({});
 
   useEffect(() => {
-    const url = `http://localhost:5000/task/${taskId}`;
+    const url = `https://upper-chesterfield-76132.herokuapp.com/task/${taskId}`;
     fetch(url)
       .then((res) => res.json())
       .then((data) => setTasks(data));
@@ -17,7 +17,7 @@ const TaskUpdate = () => {
     console.log(data);
     const task = data.task;
     const updatedTask = { task };
-    const url = `http://localhost:5000/task/${taskId}`;
+    const url = `https://upper-chesterfield-76132.herokuapp.com/task/${taskId}`;
     fetch(url, {
       method: "PUT",
       headers: {

@@ -8,19 +8,20 @@ const Todos = () => {
   const [tasks, setTasks] = useState([]);
   const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
+  const { _id } = tasks;
 
   const navigateToUpdate = (id) => {
     navigate(`/task/${id}`);
   };
 
   useEffect(() => {
-    fetch("http://localhost:5000/task")
+    fetch("https://upper-chesterfield-76132.herokuapp.com/task")
       .then((res) => res.json())
       .then((data) => setTasks(data));
   }, []);
 
   const handleDelete = (id) => {
-    const url = `http://localhost:5000/task/${id}`;
+    const url = `https://upper-chesterfield-76132.herokuapp.com/task/${id}`;
     fetch(url, {
       method: "DELETE",
     })
@@ -34,14 +35,19 @@ const Todos = () => {
   };
 
   const onSubmit = (data) => {
-    console.log(data);
-    const url = `http://localhost:5000/task`;
+    const task = data.task;
+    const todos = {
+      task,
+      stutas: "incomplete",
+    };
+    console.log(todos);
+    const url = `https://upper-chesterfield-76132.herokuapp.com/task`;
     fetch(url, {
       method: "POST",
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(todos),
     })
       .then((res) => res.json())
       .then((result) => {
@@ -51,12 +57,19 @@ const Todos = () => {
   };
 
   const completedTask = (id) => {
-    const url = `http://localhost:5000/task/${id}`;
+    const { task } = tasks;
+    console.log(tasks);
+    const completedTask = {
+      task: task,
+      stutas: "complete",
+    };
+    const url = `https://upper-chesterfield-76132.herokuapp.com/task/${id}`;
     fetch(url, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
       },
+      body: JSON.stringify(completedTask),
     })
       .then((res) => res.json())
       .then((data) => {
@@ -110,7 +123,7 @@ const Todos = () => {
                   <th>
                     <label>
                       <input
-                        onClick={() => completedTask(item._id)}
+                        onClick={completedTask}
                         type="checkbox"
                         className="checkbox"
                       />
